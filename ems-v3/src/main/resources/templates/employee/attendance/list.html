@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/employee}">
+<head><title>My Attendance</title></head>
+<body>
+<div layout:fragment="content">
+  <div class="ph"><h1>My Attendance</h1><p>Last 30 days attendance record</p></div>
+  <div class="sg" style="grid-template-columns:repeat(3,1fr);margin-bottom:20px;">
+    <div class="sc gr"><div class="sc-lb">Days Present</div><div class="sc-v" th:text="${present}">0</div></div>
+    <div class="sc re"><div class="sc-lb">Days Absent</div><div class="sc-v" th:text="${absent}">0</div></div>
+    <div class="sc ye"><div class="sc-lb">Late Arrivals</div><div class="sc-v" th:text="${late}">0</div></div>
+  </div>
+  <div class="card">
+    <div class="ch"><span class="ct">Attendance Records (Last 30 Days)</span></div>
+    <div class="tw"><table>
+      <thead><tr><th>Date</th><th>Day</th><th>Check In</th><th>Check Out</th><th>Status</th><th>Remarks</th></tr></thead>
+      <tbody>
+      <tr th:each="a : ${records}">
+        <td style="font-weight:600;" th:text="${a.date}"></td>
+        <td style="font-size:13px;color:#64748b;" th:text="${a.date.dayOfWeek.toString().substring(0,3)}"></td>
+        <td th:text="${a.checkIn != null ? a.checkIn : '—'}"></td>
+        <td th:text="${a.checkOut != null ? a.checkOut : '—'}"></td>
+        <td>
+          <span th:if="${a.status.name() == 'PRESENT'}" class="badge bg">Present</span>
+          <span th:if="${a.status.name() == 'ABSENT'}" class="badge br">Absent</span>
+          <span th:if="${a.status.name() == 'LATE'}" class="badge by">Late</span>
+          <span th:if="${a.status.name() == 'HALF_DAY'}" class="badge bo2">Half Day</span>
+          <span th:if="${a.status.name() == 'ON_LEAVE'}" class="badge bk">On Leave</span>
+        </td>
+        <td style="font-size:13px;color:#64748b;" th:text="${a.remarks != null ? a.remarks : '—'}"></td>
+      </tr>
+      <tr th:if="${#lists.isEmpty(records)}"><td colspan="6" class="empty"><p>No records found</p></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</div>
+</body>
+</html>

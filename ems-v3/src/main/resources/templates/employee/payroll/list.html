@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/employee}">
+<head><title>My Payslips</title></head>
+<body>
+<div layout:fragment="content">
+  <div class="ph"><h1>My Payroll &amp; Payslips</h1></div>
+  <div class="card">
+    <div class="ch"><span class="ct">Payroll History</span></div>
+    <div class="tw"><table>
+      <thead><tr><th>#</th><th>Month / Year</th><th>Basic</th><th>Allowances</th><th>Deductions</th><th>Net Pay</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody>
+      <tr th:each="p : ${payrolls}">
+        <td style="color:#94a3b8;" th:text="${p.id}"></td>
+        <td style="font-weight:600;" th:text="${p.monthName + ' ' + p.payrollYear}"></td>
+        <td th:text="|₹${#numbers.formatDecimal(p.basicSalary ?: 0,0,'COMMA',0,'POINT')}|"></td>
+        <td style="color:#10b981;" th:text="|+₹${#numbers.formatDecimal(p.allowances ?: 0,0,'COMMA',0,'POINT')}|"></td>
+        <td style="color:#ef4444;" th:text="|-₹${#numbers.formatDecimal(p.deductions ?: 0,0,'COMMA',0,'POINT')}|"></td>
+        <td><strong style="color:#f97316;" th:text="|₹${#numbers.formatDecimal(p.netPay ?: 0,0,'COMMA',0,'POINT')}|"></strong></td>
+        <td>
+          <span th:if="${p.status.name() == 'PAID'}" class="badge bg">Paid</span>
+          <span th:if="${p.status.name() == 'PENDING'}" class="badge by">Pending</span>
+          <span th:if="${p.status.name() == 'CANCELLED'}" class="badge bk">Cancelled</span>
+        </td>
+        <td>
+          <div style="display:flex;gap:5px;">
+            <a th:href="@{/employee/payroll/{id}/payslip(id=${p.id})}" class="btn btn-i btn-xs">View</a>
+            <a th:href="@{/employee/payroll/{id}/payslip/download(id=${p.id})}" class="btn btn-p btn-xs">&#x2B07; PDF</a>
+          </div>
+        </td>
+      </tr>
+      <tr th:if="${#lists.isEmpty(payrolls)}"><td colspan="8" class="empty"><p>No payroll records yet</p></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</div>
+</body>
+</html>

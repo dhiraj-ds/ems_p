@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/admin}">
+<head><title>Departments</title></head>
+<body>
+<div layout:fragment="content">
+  <div class="ph"><h1>Departments</h1><p>Manage company departments</p></div>
+  <div class="card">
+    <div class="ch"><span class="ct">All Departments</span><a th:href="@{/admin/departments/add}" class="btn btn-p btn-sm">+ Add</a></div>
+    <div class="tw"><table>
+      <thead><tr><th>#</th><th>Name</th><th>Head</th><th>Email</th><th>Positions</th><th>Employees</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody>
+      <tr th:each="d : ${departments}">
+        <td style="color:#94a3b8;font-size:12.5px;" th:text="${d.id}"></td>
+        <td style="font-weight:600;" th:text="${d.name}"></td>
+        <td th:text="${d.head != null ? d.head : '—'}"></td>
+        <td th:text="${d.email != null ? d.email : '—'}"></td>
+        <td th:text="${d.numberOfPositions != null ? d.numberOfPositions : '—'}"></td>
+        <td><span class="badge bb" th:text="${d.employeeCount}"></span></td>
+        <td>
+          <span th:if="${d.status.name() == 'ACTIVE'}" class="badge bg">Active</span>
+          <span th:if="${d.status.name() == 'EXPANDING'}" class="badge by">Expanding</span>
+          <span th:if="${d.status.name() == 'INACTIVE'}" class="badge bk">Inactive</span>
+        </td>
+        <td>
+          <div style="display:flex;gap:5px;">
+            <a th:href="@{/admin/departments/{id}/edit(id=${d.id})}" class="btn btn-i btn-xs">Edit</a>
+            <button class="btn btn-d btn-xs" th:onclick="|openDel('${d.name}','df${d.id}')|">Delete</button>
+            <form th:id="|df${d.id}|" th:action="@{/admin/departments/{id}/delete(id=${d.id})}" method="post" style="display:none;"></form>
+          </div>
+        </td>
+      </tr>
+      <tr th:if="${#lists.isEmpty(departments)}"><td colspan="8" class="empty"><p>No departments</p></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</div>
+</body>
+</html>

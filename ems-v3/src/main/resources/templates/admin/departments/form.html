@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/admin}">
+<head><title>Department Form</title></head>
+<body>
+<div layout:fragment="content">
+  <div class="ph"><h1 th:text="${department.id != null ? 'Edit Department' : 'Add Department'}">Department</h1></div>
+  <div class="card">
+    <form th:action="${department.id != null ? '/admin/departments/' + department.id + '/update' : '/admin/departments/save'}" method="post">
+      <div class="fg">
+        <div class="fi"><label>Name *</label><input class="fc" type="text" name="name" th:value="${department.name}" required></div>
+        <div class="fi"><label>Head / Manager</label><input class="fc" type="text" name="head" th:value="${department.head}"></div>
+        <div class="fi"><label>Email</label><input class="fc" type="email" name="email" th:value="${department.email}"></div>
+        <div class="fi"><label>No. of Positions</label><input class="fc" type="number" name="numberOfPositions" th:value="${department.numberOfPositions}"></div>
+        <div class="fi">
+          <label>Status</label>
+          <select class="fc" name="status">
+            <option value="ACTIVE" th:selected="${department.status?.name() == 'ACTIVE'}">Active</option>
+            <option value="EXPANDING" th:selected="${department.status?.name() == 'EXPANDING'}">Expanding</option>
+            <option value="INACTIVE" th:selected="${department.status?.name() == 'INACTIVE'}">Inactive</option>
+          </select>
+        </div>
+      </div>
+      <div class="fi" style="margin-top:14px;"><label>Description</label><textarea class="fc" name="description" th:text="${department.description}"></textarea></div>
+      <div class="ff">
+        <button class="btn btn-p" type="submit">&#x2713; Save</button>
+        <a th:href="@{/admin/departments}" class="btn btn-o">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+</body>
+</html>

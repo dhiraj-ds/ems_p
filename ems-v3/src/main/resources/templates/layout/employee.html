@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title layout:title-pattern="$CONTENT_TITLE — EMS">EMS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-logo">
+      <a th:href="@{/employee/dashboard}">
+        <div class="sb-icon"><svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="white" viewBox="0 0 24 24"><path d="M12 7V3H2v18h20V7H12z"/></svg></div>
+        <div class="sb-text"><span>Employee</span><br>Management System</div>
+      </a>
+    </div>
+    <div class="sb-lbl">Main</div>
+    <nav class="sb-nav">
+      <a th:href="@{/employee/dashboard}" class="nl" th:classappend="${activePage == 'dashboard'} ? ' on'">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+        Dashboard
+      </a>
+      <button class="nl" th:classappend="${activePage == 'leaves'} ? ' on ex'" onclick="toggleSub(this)">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
+        Leave Management <span class="chv">&#x203A;</span>
+      </button>
+      <div class="sub" th:classappend="${activePage == 'leaves'} ? ' open'">
+        <a th:href="@{/employee/leaves}">My Leaves</a>
+        <a th:href="@{/employee/leaves/apply}">Apply for Leave</a>
+      </div>
+      <button class="nl" th:classappend="${activePage == 'payroll'} ? ' on ex'" onclick="toggleSub(this)">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+        Payroll <span class="chv">&#x203A;</span>
+      </button>
+      <div class="sub" th:classappend="${activePage == 'payroll'} ? ' open'">
+        <a th:href="@{/employee/payroll}">My Payslips</a>
+      </div>
+      <button class="nl" th:classappend="${activePage == 'attendance'} ? ' on ex'" onclick="toggleSub(this)">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+        Attendance <span class="chv">&#x203A;</span>
+      </button>
+      <div class="sub" th:classappend="${activePage == 'attendance'} ? ' open'">
+        <a th:href="@{/employee/attendance}">My Attendance</a>
+      </div>
+      <button class="nl" th:classappend="${activePage == 'announcements'} ? ' on ex'" onclick="toggleSub(this)">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+        Announcements <span class="chv">&#x203A;</span>
+      </button>
+      <div class="sub" th:classappend="${activePage == 'announcements'} ? ' open'">
+        <a th:href="@{/employee/announcements}">View Announcements</a>
+      </div>
+    </nav>
+    <div class="sb-foot">
+      <div class="u-card">
+        <div class="u-av" sec:authentication="name" th:text="${#authentication != null ? #authentication.name.substring(0,1).toUpperCase() : 'E'}">E</div>
+        <div>
+          <div class="u-name" sec:authentication="name">Employee</div>
+          <div class="u-role">Employee Portal</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main" id="main">
+    <header class="topbar">
+      <div class="tb-l">
+        <button class="hbg" onclick="toggleSidebar()"><span></span><span></span><span></span></button>
+      </div>
+      <div class="tb-r">
+        <a th:href="@{/employee/leaves/apply}" class="btn-app">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+          + Apply Leave
+        </a>
+        <a th:href="@{/auth/logout}" class="btn-out">Logout</a>
+        <div class="tb-av" sec:authentication="name" th:text="${#authentication != null ? #authentication.name.substring(0,1).toUpperCase() : 'E'}">E</div>
+      </div>
+    </header>
+    <div class="pg">
+      <div th:if="${success}" class="alert al-ok"><span>&#x2713;</span> <span th:text="${success}"></span></div>
+      <div th:if="${error}"   class="alert al-er"><span>&#x26A0;</span> <span th:text="${error}"></span></div>
+      <div layout:fragment="content"></div>
+    </div>
+  </div>
+</div>
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

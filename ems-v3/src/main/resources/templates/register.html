@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>EMS — Create Account</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Inter',sans-serif;background:#f8fafc;min-height:100vh;display:flex;}
+    .wrap{display:grid;grid-template-columns:1fr 1.4fr;width:100%;min-height:100vh;}
+    .left{background:linear-gradient(160deg,#0f172a 0%,#1e293b 60%,#f97316 100%);display:flex;flex-direction:column;justify-content:center;padding:60px;color:#fff;}
+    .brand{display:flex;align-items:center;gap:12px;margin-bottom:50px;}
+    .bic{width:44px;height:44px;background:rgba(249,115,22,.3);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;}
+    .bnm{font-size:21px;font-weight:800;}
+    .left h1{font-size:36px;font-weight:800;line-height:1.2;margin-bottom:14px;}
+    .left p{font-size:15.5px;opacity:.85;line-height:1.7;margin-bottom:36px;}
+    .steps{list-style:none;counter-reset:step;}
+    .steps li{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.1);font-size:14px;align-items:flex-start;}
+    .steps li:last-child{border:none;}
+    .step-n{width:26px;height:26px;background:#f97316;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
+    .right{display:flex;align-items:flex-start;justify-content:center;padding:40px;background:#fff;overflow-y:auto;}
+    .fbox{width:100%;max-width:520px;padding-top:20px;}
+    .fbox h2{font-size:26px;font-weight:800;color:#0f172a;margin-bottom:5px;}
+    .sub{color:#64748b;font-size:14px;margin-bottom:24px;}
+    .alert{padding:11px 15px;border-radius:8px;margin-bottom:16px;display:flex;align-items:center;gap:9px;font-size:13.5px;}
+    .al-er{background:#fee2e2;color:#991b1b;border:1px solid #fecaca;}
+    .sect-lbl{font-size:11.5px;font-weight:700;color:#f97316;text-transform:uppercase;letter-spacing:.06em;margin:20px 0 12px;padding-bottom:8px;border-bottom:2px solid #fff7ed;}
+    .fg2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+    .fi{display:flex;flex-direction:column;gap:5px;}
+    .fi label{font-size:13px;font-weight:600;color:#334155;}
+    .fc{padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:14px;color:#1e293b;background:#f8fafc;width:100%;transition:.14s;}
+    .fc:focus{outline:none;border-color:#f97316;box-shadow:0 0 0 3px rgba(249,115,22,.12);background:#fff;}
+    select.fc{cursor:pointer;}
+    .sbtn{width:100%;background:#f97316;color:#fff;border:none;padding:13px;border-radius:9px;font-size:15px;font-weight:700;cursor:pointer;transition:.14s;margin-top:16px;}.sbtn:hover{background:#ea580c;}
+    .lf{text-align:center;margin-top:18px;font-size:13.5px;color:#64748b;}.lf a{color:#f97316;font-weight:600;text-decoration:none;}
+    .pw-hint{font-size:11.5px;color:#94a3b8;margin-top:3px;}
+    @media(max-width:768px){.wrap{grid-template-columns:1fr;}.left{display:none;}.right{padding:20px 16px;}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="left">
+    <div class="brand"><div class="bic">&#x1F464;</div><span class="bnm">EMS Employee Registration</span></div>
+    <h1>Join Your Organization</h1>
+    <p>Create your employee account to access payslips, apply for leaves, track attendance, and stay updated with company announcements.</p>
+    <ul class="steps">
+      <li><div class="step-n">1</div><div>Fill in your personal details and choose your department</div></li>
+      <li><div class="step-n">2</div><div>Create a secure login username and password</div></li>
+      <li><div class="step-n">3</div><div>Your account is activated immediately — login right away!</div></li>
+      <li><div class="step-n">4</div><div>Access your personal HR dashboard with JWT-secured sessions</div></li>
+    </ul>
+  </div>
+  <div class="right">
+    <div class="fbox">
+      <h2>Create Employee Account</h2>
+      <p class="sub">Fill in the form below to register. All fields marked * are required.</p>
+
+      <div th:if="${error}" class="alert al-er">&#x26A0; <span th:text="${error}"></span></div>
+
+      <form th:action="@{/auth/register}" method="POST">
+        <div class="sect-lbl">&#x1F512; Login Credentials</div>
+        <div class="fg2">
+          <div class="fi"><label>Username *</label><input class="fc" type="text" name="username" placeholder="e.g. john.doe" required></div>
+          <div class="fi" style="grid-column:1/-1"></div>
+          <div class="fi"><label>Password *</label><input class="fc" type="password" name="password" placeholder="Min 6 characters" required></div>
+          <div class="fi"><label>Confirm Password *</label><input class="fc" type="password" name="confirmPassword" placeholder="Repeat password" required></div>
+        </div>
+        <p class="pw-hint">&#x26A0; Use at least 6 characters with letters and numbers for a strong password.</p>
+
+        <div class="sect-lbl">&#x1F464; Personal Information</div>
+        <div class="fg2">
+          <div class="fi"><label>First Name *</label><input class="fc" type="text" name="firstName" placeholder="John" required></div>
+          <div class="fi"><label>Last Name *</label><input class="fc" type="text" name="lastName" placeholder="Doe" required></div>
+          <div class="fi" style="grid-column:1/-1"><label>Email Address *</label><input class="fc" type="email" name="email" placeholder="john@company.com" required></div>
+          <div class="fi"><label>Phone</label><input class="fc" type="text" name="phone" placeholder="9876543210"></div>
+          <div class="fi">
+            <label>Gender</label>
+            <select class="fc" name="gender">
+              <option value="">— Select —</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="sect-lbl">&#x1F3E2; Work Details</div>
+        <div class="fg2">
+          <div class="fi">
+            <label>Department</label>
+            <select class="fc" name="departmentId">
+              <option value="">— Select Department —</option>
+              <option th:each="dept : ${departments}" th:value="${dept.id}" th:text="${dept.name}"></option>
+            </select>
+          </div>
+          <div class="fi"><label>Position / Role</label><input class="fc" type="text" name="position" placeholder="e.g. Software Engineer"></div>
+        </div>
+
+        <button type="submit" class="sbtn">&#x2B; Create My Account</button>
+      </form>
+      <div class="lf">Already have an account? <a th:href="@{/login}">Sign In here</a> &nbsp;|&nbsp; <a th:href="@{/}">&#x2190; Home</a></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

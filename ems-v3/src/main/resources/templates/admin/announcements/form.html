@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/admin}">
+<head><title>Announcement Form</title></head>
+<body>
+<div layout:fragment="content">
+  <div class="ph"><h1 th:text="${announcement.id != null ? 'Edit Announcement' : 'Post Announcement'}">Announcement</h1></div>
+  <div class="card">
+    <form th:action="${announcement.id != null ? '/admin/announcements/' + announcement.id + '/update' : '/admin/announcements/save'}" method="post">
+      <div class="fg">
+        <div class="fi"><label>Title *</label><input class="fc" type="text" name="title" th:value="${announcement.title}" required></div>
+        <div class="fi">
+          <label>Audience</label>
+          <select class="fc" name="audience">
+            <option value="ALL_STAFF" th:selected="${announcement.audience?.name() == 'ALL_STAFF'}">All Staff</option>
+            <option value="ENGINEERING" th:selected="${announcement.audience?.name() == 'ENGINEERING'}">Engineering</option>
+            <option value="HR" th:selected="${announcement.audience?.name() == 'HR'}">Human Resources</option>
+            <option value="FINANCE" th:selected="${announcement.audience?.name() == 'FINANCE'}">Finance</option>
+            <option value="MARKETING" th:selected="${announcement.audience?.name() == 'MARKETING'}">Marketing</option>
+          </select>
+        </div>
+        <div class="fi">
+          <label>Priority</label>
+          <select class="fc" name="priority">
+            <option value="NORMAL" th:selected="${announcement.priority?.name() == 'NORMAL'}">Normal</option>
+            <option value="IMPORTANT" th:selected="${announcement.priority?.name() == 'IMPORTANT'}">Important</option>
+            <option value="URGENT" th:selected="${announcement.priority?.name() == 'URGENT'}">Urgent</option>
+            <option value="HR_UPDATE" th:selected="${announcement.priority?.name() == 'HR_UPDATE'}">HR Update</option>
+          </select>
+        </div>
+      </div>
+      <div class="fi" style="margin-top:14px;"><label>Message *</label><textarea class="fc" name="message" rows="5" required th:text="${announcement.message}"></textarea></div>
+      <div class="ff">
+        <button class="btn btn-p" type="submit" th:text="${announcement.id != null ? '✓ Update' : '✓ Post'} + ' Announcement'">Post</button>
+        <a th:href="@{/admin/announcements}" class="btn btn-o">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+</body>
+</html>

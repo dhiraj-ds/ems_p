@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/admin}">
+<head><title>Announcements</title></head>
+<body>
+<div layout:fragment="content">
+  <div class="ph"><h1>Announcements</h1><p>Company announcements and notices</p></div>
+  <div style="margin-bottom:16px;display:flex;justify-content:flex-end;">
+    <a th:href="@{/admin/announcements/add}" class="btn btn-p btn-sm">+ Post Announcement</a>
+  </div>
+  <div th:if="${!#lists.isEmpty(announcements)}" class="ag">
+    <div th:each="a : ${announcements}"
+         th:classappend="${a.priority.name() == 'URGENT'} ? ' ur' : (${a.priority.name() == 'IMPORTANT'} ? ' im' : (${a.priority.name() == 'HR_UPDATE'} ? ' hr' : ''))"
+         class="ac">
+      <div class="at" th:text="${a.title}"></div>
+      <div class="am">
+        <span th:if="${a.priority.name() == 'URGENT'}" class="badge br">Urgent</span>
+        <span th:if="${a.priority.name() == 'IMPORTANT'}" class="badge by">Important</span>
+        <span th:if="${a.priority.name() == 'HR_UPDATE'}" class="badge bp">HR Update</span>
+        <span th:if="${a.priority.name() == 'NORMAL'}" class="badge bk">Normal</span>
+        <span class="badge bb" th:text="${a.audience}"></span>
+        <span style="font-size:12px;color:#94a3b8;" th:text="${a.postDate}"></span>
+      </div>
+      <div class="ab" th:text="${a.message}"></div>
+      <div style="margin-top:12px;display:flex;gap:8px;">
+        <a th:href="@{/admin/announcements/{id}/edit(id=${a.id})}" class="btn btn-i btn-xs">Edit</a>
+        <button class="btn btn-d btn-xs" th:onclick="|openDel('${a.title}','df${a.id}')|">Delete</button>
+        <form th:id="|df${a.id}|" th:action="@{/admin/announcements/{id}/delete(id=${a.id})}" method="post" style="display:none;"></form>
+      </div>
+    </div>
+  </div>
+  <div th:if="${#lists.isEmpty(announcements)}" class="empty"><p>No announcements yet</p></div>
+</div>
+</body>
+</html>

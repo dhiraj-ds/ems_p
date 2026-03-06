@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/employee}">
+<head><title>My Dashboard</title></head>
+<body>
+<div layout:fragment="content">
+  <div class="wb">
+    <div><h1>Welcome, <span th:text="${employee.firstName}">Employee</span>! &#x1F44B;</h1><p>Here's a summary of your activities</p></div>
+    <div class="dchip">&#x1F4C5; <span id="todayDate"></span></div>
+  </div>
+  <div class="sg">
+    <a th:href="@{/employee/leaves}" class="sc ye">
+      <div class="sc-ic"><svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg></div>
+      <div class="sc-lb">Pending Leaves</div><div class="sc-v" th:text="${pendingLeaves}">0</div>
+    </a>
+    <a th:href="@{/employee/leaves}" class="sc gr">
+      <div class="sc-ic"><svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div>
+      <div class="sc-lb">Approved Leaves</div><div class="sc-v" th:text="${approvedLeaves}">0</div>
+    </a>
+    <a th:href="@{/employee/attendance}" class="sc bl">
+      <div class="sc-ic"><svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div>
+      <div class="sc-lb">Days Present (Month)</div><div class="sc-v" th:text="${attendanceDays}">0</div>
+    </a>
+    <a th:href="@{/employee/announcements}" class="sc pu">
+      <div class="sc-ic"><svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg></div>
+      <div class="sc-lb">Announcements</div><div class="sc-v" th:text="${announcements}">0</div>
+    </a>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+    <div class="card">
+      <div class="ch"><span class="ct">&#x1F464; My Profile</span></div>
+      <div style="display:flex;gap:14px;align-items:flex-start;">
+        <div style="width:50px;height:50px;background:#f97316;border-radius:50%;color:white;font-size:20px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;" th:text="${employee.firstName.substring(0,1).toUpperCase()}">E</div>
+        <div>
+          <div style="font-size:16px;font-weight:700;" th:text="${employee.fullName}"></div>
+          <div style="font-size:13px;color:#64748b;margin-top:2px;" th:text="${employee.position != null ? employee.position : '—'}"></div>
+          <div style="font-size:13px;color:#64748b;" th:text="${employee.department != null ? employee.department.name : '—'}"></div>
+          <div style="font-size:13px;color:#94a3b8;margin-top:6px;" th:text="${employee.email}"></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ch"><span class="ct">&#x26A1; Quick Actions</span></div>
+      <div style="display:flex;flex-direction:column;gap:9px;">
+        <a th:href="@{/employee/leaves/apply}" class="btn btn-p btn-sm">+ Apply for Leave</a>
+        <a th:href="@{/employee/payroll}" class="btn btn-s btn-sm">View My Payslips</a>
+        <a th:href="@{/employee/attendance}" class="btn btn-i btn-sm">View Attendance</a>
+        <a th:href="@{/employee/announcements}" class="btn btn-v btn-sm">View Announcements</a>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

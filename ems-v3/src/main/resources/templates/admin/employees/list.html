@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/admin}">
+<head><title>Employees</title></head>
+<body>
+<div layout:fragment="content">
+  <div class="ph"><h1>Employees</h1><p>Manage all employees in the organization</p></div>
+  <div class="card">
+    <div class="ch">
+      <form th:action="@{/admin/employees}" method="get" style="display:flex;gap:8px;align-items:center;">
+        <input class="fc" style="max-width:290px;" type="text" name="q" placeholder="Search name, email, position..." th:value="${query}">
+        <button class="btn btn-p btn-sm" type="submit">Search</button>
+        <a th:if="${query}" th:href="@{/admin/employees}" class="btn btn-o btn-sm">Clear</a>
+      </form>
+      <a th:href="@{/admin/employees/add}" class="btn btn-p btn-sm">+ Add Employee</a>
+    </div>
+    <div class="tw">
+      <table>
+        <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Department</th><th>Position</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody>
+        <tr th:each="emp : ${employees}">
+          <td style="color:#94a3b8;font-size:12.5px;" th:text="${emp.id}"></td>
+          <td>
+            <div style="font-weight:600;" th:text="${emp.fullName}"></div>
+            <div style="font-size:12px;color:#94a3b8;" th:text="${emp.phone}"></div>
+          </td>
+          <td th:text="${emp.email}"></td>
+          <td th:text="${emp.department != null ? emp.department.name : '—'}"></td>
+          <td th:text="${emp.position != null ? emp.position : '—'}"></td>
+          <td>
+            <span th:if="${emp.status.name() == 'ACTIVE'}" class="badge bg">Active</span>
+            <span th:if="${emp.status.name() == 'ON_LEAVE'}" class="badge by">On Leave</span>
+            <span th:if="${emp.status.name() == 'INACTIVE'}" class="badge bk">Inactive</span>
+          </td>
+          <td>
+            <div style="display:flex;gap:5px;">
+              <a th:href="@{/admin/employees/{id}/edit(id=${emp.id})}" class="btn btn-i btn-xs">Edit</a>
+              <button class="btn btn-d btn-xs" th:onclick="|openDel('${emp.fullName}','df${emp.id}')|">Delete</button>
+              <form th:id="|df${emp.id}|" th:action="@{/admin/employees/{id}/delete(id=${emp.id})}" method="post" style="display:none;"></form>
+            </div>
+          </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(employees)}"><td colspan="7" class="empty"><p>No employees found</p></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</body>
+</html>

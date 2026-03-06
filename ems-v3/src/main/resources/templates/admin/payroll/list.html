@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/admin}">
+<head><title>Payroll</title></head>
+<body>
+<div layout:fragment="content">
+  <div class="ph"><h1>Payroll Records</h1><p th:text="${currentMonth}"></p></div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px;">
+    <div class="card" style="margin:0;text-align:center;">
+      <div style="font-size:11.5px;color:#64748b;font-weight:700;text-transform:uppercase;margin-bottom:8px;">Total Payroll</div>
+      <div style="font-size:24px;font-weight:800;color:#f97316;">&#x20B9;<span th:text="${#numbers.formatDecimal(totalPayroll,0,'COMMA',0,'POINT')}"></span></div>
+    </div>
+    <div class="card" style="margin:0;text-align:center;">
+      <div style="font-size:11.5px;color:#64748b;font-weight:700;text-transform:uppercase;margin-bottom:8px;">Paid Out</div>
+      <div style="font-size:24px;font-weight:800;color:#10b981;">&#x20B9;<span th:text="${#numbers.formatDecimal(totalPaid,0,'COMMA',0,'POINT')}"></span></div>
+    </div>
+    <div class="card" style="margin:0;text-align:center;">
+      <div style="font-size:11.5px;color:#64748b;font-weight:700;text-transform:uppercase;margin-bottom:8px;">Remaining</div>
+      <div style="font-size:24px;font-weight:800;color:#ef4444;">&#x20B9;<span th:text="${#numbers.formatDecimal(totalPayroll - totalPaid,0,'COMMA',0,'POINT')}"></span></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ch"><span class="ct">Payroll Records</span><a th:href="@{/admin/payroll/add}" class="btn btn-p btn-sm">+ Create</a></div>
+    <div class="tw"><table>
+      <thead><tr><th>#</th><th>Employee</th><th>Month/Year</th><th>Basic</th><th>Allowances</th><th>Deductions</th><th>Net Pay</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody>
+      <tr th:each="p : ${payrolls}">
+        <td style="color:#94a3b8;" th:text="${p.id}"></td>
+        <td style="font-weight:600;" th:text="${p.employee.fullName}"></td>
+        <td th:text="${p.monthName + ' ' + p.payrollYear}"></td>
+        <td th:text="|₹${#numbers.formatDecimal(p.basicSalary ?: 0, 0,'COMMA',0,'POINT')}|"></td>
+        <td style="color:#10b981;" th:text="|+₹${#numbers.formatDecimal(p.allowances ?: 0, 0,'COMMA',0,'POINT')}|"></td>
+        <td style="color:#ef4444;" th:text="|-₹${#numbers.formatDecimal(p.deductions ?: 0, 0,'COMMA',0,'POINT')}|"></td>
+        <td><strong style="color:#f97316;" th:text="|₹${#numbers.formatDecimal(p.netPay ?: 0, 0,'COMMA',0,'POINT')}|"></strong></td>
+        <td>
+          <span th:if="${p.status.name() == 'PAID'}" class="badge bg">Paid</span>
+          <span th:if="${p.status.name() == 'PENDING'}" class="badge by">Pending</span>
+          <span th:if="${p.status.name() == 'CANCELLED'}" class="badge bk">Cancelled</span>
+        </td>
+        <td>
+          <div style="display:flex;gap:5px;flex-wrap:wrap;">
+            <form th:if="${p.status.name() == 'PENDING'}" th:action="@{/admin/payroll/{id}/paid(id=${p.id})}" method="post" style="display:inline;">
+              <button class="btn btn-s btn-xs" type="submit">Mark Paid</button>
+            </form>
+            <button class="btn btn-d btn-xs" th:onclick="|openDel('payroll #${p.id}','df${p.id}')|">Delete</button>
+            <form th:id="|df${p.id}|" th:action="@{/admin/payroll/{id}/delete(id=${p.id})}" method="post" style="display:none;"></form>
+          </div>
+        </td>
+      </tr>
+      <tr th:if="${#lists.isEmpty(payrolls)}"><td colspan="9" class="empty"><p>No payroll records for this month</p></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</div>
+</body>
+</html>

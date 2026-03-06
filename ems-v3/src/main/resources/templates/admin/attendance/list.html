@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/admin}">
+<head><title>Attendance</title></head>
+<body>
+<div layout:fragment="content">
+  <div class="ph"><h1>Today's Attendance</h1><p>Track employee attendance for today</p></div>
+  <div class="sg" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px;">
+    <div class="sc gr"><div class="sc-lb">Present</div><div class="sc-v" th:text="${present}">0</div></div>
+    <div class="sc re"><div class="sc-lb">Absent</div><div class="sc-v" th:text="${absent}">0</div></div>
+    <div class="sc ye"><div class="sc-lb">Late</div><div class="sc-v" th:text="${late}">0</div></div>
+    <div class="sc pu"><div class="sc-lb">On Leave</div><div class="sc-v" th:text="${onLeave}">0</div></div>
+  </div>
+  <div class="card">
+    <div class="ch"><span class="ct">Attendance Records</span><a th:href="@{/admin/attendance/add}" class="btn btn-p btn-sm">+ Mark</a></div>
+    <div class="tw"><table>
+      <thead><tr><th>#</th><th>Employee</th><th>Date</th><th>Check In</th><th>Check Out</th><th>Status</th><th>Remarks</th><th>Actions</th></tr></thead>
+      <tbody>
+      <tr th:each="a : ${records}">
+        <td style="color:#94a3b8;" th:text="${a.id}"></td>
+        <td style="font-weight:600;" th:text="${a.employee.fullName}"></td>
+        <td th:text="${a.date}"></td>
+        <td th:text="${a.checkIn != null ? a.checkIn : '—'}"></td>
+        <td th:text="${a.checkOut != null ? a.checkOut : '—'}"></td>
+        <td>
+          <span th:if="${a.status.name() == 'PRESENT'}" class="badge bg">Present</span>
+          <span th:if="${a.status.name() == 'ABSENT'}" class="badge br">Absent</span>
+          <span th:if="${a.status.name() == 'LATE'}" class="badge by">Late</span>
+          <span th:if="${a.status.name() == 'HALF_DAY'}" class="badge bo2">Half Day</span>
+          <span th:if="${a.status.name() == 'ON_LEAVE'}" class="badge bk">On Leave</span>
+        </td>
+        <td style="font-size:13px;color:#64748b;" th:text="${a.remarks != null ? a.remarks : '—'}"></td>
+        <td>
+          <div style="display:flex;gap:5px;">
+            <a th:href="@{/admin/attendance/{id}/edit(id=${a.id})}" class="btn btn-i btn-xs">Edit</a>
+            <button class="btn btn-d btn-xs" th:onclick="|openDel('record #${a.id}','df${a.id}')|">Del</button>
+            <form th:id="|df${a.id}|" th:action="@{/admin/attendance/{id}/delete(id=${a.id})}" method="post" style="display:none;"></form>
+          </div>
+        </td>
+      </tr>
+      <tr th:if="${#lists.isEmpty(records)}"><td colspan="8" class="empty"><p>No attendance records for today</p></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</div>
+</body>
+</html>
