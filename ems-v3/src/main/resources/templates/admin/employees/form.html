@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/admin}">
+<head><title>Employee Form</title></head>
+<body>
+<div layout:fragment="content">
+  <div class="ph">
+    <h1 th:text="${employee.id != null ? 'Edit Employee' : 'Add Employee'}">Employee Form</h1>
+    <p th:text="${employee.id != null ? 'Update employee information' : 'Add a new employee to the system'}"></p>
+  </div>
+  <div class="card">
+    <form id="empForm" th:action="${employee.id != null ? '/admin/employees/' + employee.id + '/update' : '/admin/employees/save'}" method="post" novalidate>
+      <div th:if="${employee.id == null}" style="background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:13px 15px;margin-bottom:18px;font-size:13.5px;color:#92400e;">
+        <strong>&#x1F512; Login Credentials</strong> — The employee will use these to login
+      </div>
+      <div th:if="${employee.id == null}" class="fg" style="margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid #f1f5f9;">
+        <div class="fi">
+          <label>Username *</label>
+          <input class="fc" type="text" name="username" required data-username placeholder="e.g. john.doe">
+        </div>
+        <div class="fi">
+          <label>Password *</label>
+          <input class="fc" type="password" name="password" required data-password placeholder="Min 6 characters">
+        </div>
+      </div>
+      <div class="fg">
+        <div class="fi">
+          <label>First Name *</label>
+          <input class="fc" type="text" name="firstName" th:value="${employee.firstName}" required data-name placeholder="Letters only">
+        </div>
+        <div class="fi">
+          <label>Last Name *</label>
+          <input class="fc" type="text" name="lastName" th:value="${employee.lastName}" required data-name placeholder="Letters only">
+        </div>
+        <div class="fi">
+          <label>Email *</label>
+          <input class="fc" type="email" name="email" th:value="${employee.email}" required placeholder="john@example.com">
+        </div>
+        <div class="fi">
+          <label>Phone <span style="color:#94a3b8;font-size:11px;">(10 digits)</span></label>
+          <input class="fc" type="text" name="phone" th:value="${employee.phone}" data-phone placeholder="9876543210" maxlength="10">
+        </div>
+        <div class="fi">
+          <label>Department</label>
+          <select class="fc" name="departmentId">
+            <option value="">— Select —</option>
+            <option th:each="d : ${departments}" th:value="${d.id}" th:text="${d.name}" th:selected="${employee.department != null and employee.department.id == d.id}"></option>
+          </select>
+        </div>
+        <div class="fi">
+          <label>Position</label>
+          <input class="fc" type="text" name="position" th:value="${employee.position}" placeholder="e.g. Software Engineer">
+        </div>
+        <div class="fi">
+          <label>Join Date *</label>
+          <input class="fc" type="date" name="joinDate" th:value="${employee.joinDate}" required>
+        </div>
+        <div class="fi">
+          <label>Basic Salary (&#x20B9;) *</label>
+          <input class="fc" type="number" step="0.01" name="basicSalary" th:value="${employee.basicSalary}" required data-positive data-positive-msg="Salary must be greater than 0" min="1">
+        </div>
+        <div class="fi">
+          <label>Gender</label>
+          <select class="fc" name="gender">
+            <option value="">— Select —</option>
+            <option value="Male"   th:selected="${employee.gender == 'Male'}">Male</option>
+            <option value="Female" th:selected="${employee.gender == 'Female'}">Female</option>
+            <option value="Other"  th:selected="${employee.gender == 'Other'}">Other</option>
+          </select>
+        </div>
+        <div class="fi">
+          <label>Status</label>
+          <select class="fc" name="status">
+            <option value="ACTIVE"   th:selected="${employee.status?.name() == 'ACTIVE'}">Active</option>
+            <option value="ON_LEAVE" th:selected="${employee.status?.name() == 'ON_LEAVE'}">On Leave</option>
+            <option value="INACTIVE" th:selected="${employee.status?.name() == 'INACTIVE'}">Inactive</option>
+          </select>
+        </div>
+      </div>
+      <div class="fi" style="margin-top:14px;">
+        <label>Address</label>
+        <textarea class="fc" name="address" th:text="${employee.address}" placeholder="Full address"></textarea>
+      </div>
+      <div class="ff">
+        <button class="btn btn-p" type="submit" th:text="${employee.id != null ? '✓ Update Employee' : '✓ Add Employee'}">Save</button>
+        <a th:href="@{/admin/employees}" class="btn btn-o">Cancel</a>
+      </div>
+    </form>
+  </div>
+  <script th:src="@{/js/validate.js}"></script>
+  <script>
+    const form = document.getElementById('empForm');
+    emsLive(form);
+    form.addEventListener('submit', function(e){ if(!emsValidate(form)) e.preventDefault(); });
+  </script>
+</div>
+</body>
+</html>

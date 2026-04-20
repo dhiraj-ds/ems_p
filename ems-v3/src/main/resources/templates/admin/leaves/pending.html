@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/admin}">
+<head><title>Pending Leaves</title></head>
+<body>
+<div layout:fragment="content">
+  <div class="ph"><h1>Pending Leave Approvals</h1><p>Review and act on leave requests</p></div>
+  <div class="card">
+    <div class="ch"><span class="ct" th:text="|Awaiting Action (${#lists.size(leaves)})|">Pending</span><a th:href="@{/admin/leaves}" class="btn btn-o btn-sm">All Leaves</a></div>
+    <div class="tw"><table>
+      <thead><tr><th>#</th><th>Employee</th><th>Department</th><th>Type</th><th>From</th><th>To</th><th>Days</th><th>Reason</th><th>Actions</th></tr></thead>
+      <tbody>
+      <tr th:each="l : ${leaves}">
+        <td style="color:#94a3b8;" th:text="${l.id}"></td>
+        <td style="font-weight:600;" th:text="${l.employee.fullName}"></td>
+        <td th:text="${l.employee.department != null ? l.employee.department.name : '—'}"></td>
+        <td><span class="badge bb" th:text="${l.leaveType}"></span></td>
+        <td th:text="${l.fromDate}"></td>
+        <td th:text="${l.toDate}"></td>
+        <td><strong th:text="${l.days}"></strong></td>
+        <td style="max-width:180px;font-size:13px;color:#64748b;" th:text="${l.reason}"></td>
+        <td>
+          <div style="display:flex;gap:5px;flex-wrap:wrap;">
+            <form th:action="@{/admin/leaves/{id}/approve(id=${l.id})}" method="post" style="display:inline;">
+              <button class="btn btn-s btn-xs" type="submit">Approve</button>
+            </form>
+            <form th:action="@{/admin/leaves/{id}/reject(id=${l.id})}" method="post" style="display:inline;">
+              <button class="btn btn-d btn-xs" type="submit">Reject</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      <tr th:if="${#lists.isEmpty(leaves)}"><td colspan="9" class="empty"><p>No pending leaves &#x1F389;</p></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</div>
+</body>
+</html>

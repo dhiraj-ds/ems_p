@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/admin}">
+<head><title>Leave Records</title></head>
+<body>
+<div layout:fragment="content">
+  <div class="ph"><h1>Leave Records</h1><p>All employee leave requests</p></div>
+  <div class="card">
+    <div class="ch"><span class="ct">All Leaves</span><a th:href="@{/admin/leaves/pending}" class="btn btn-w btn-sm">View Pending</a></div>
+    <div class="tw"><table>
+      <thead><tr><th>#</th><th>Employee</th><th>Type</th><th>From</th><th>To</th><th>Days</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody>
+      <tr th:each="l : ${leaves}">
+        <td style="color:#94a3b8;" th:text="${l.id}"></td>
+        <td style="font-weight:600;" th:text="${l.employee.fullName}"></td>
+        <td><span class="badge bb" th:text="${l.leaveType}"></span></td>
+        <td th:text="${l.fromDate}"></td>
+        <td th:text="${l.toDate}"></td>
+        <td th:text="${l.days}"></td>
+        <td>
+          <span th:if="${l.status.name() == 'APPROVED'}" class="badge bg">Approved</span>
+          <span th:if="${l.status.name() == 'PENDING'}" class="badge by">Pending</span>
+          <span th:if="${l.status.name() == 'REJECTED'}" class="badge br">Rejected</span>
+        </td>
+        <td>
+          <button class="btn btn-d btn-xs"
+                  th:data-id="${l.id}"
+                  th:data-form-id="|df${l.id}|"
+                  onclick="openDel(this)">
+            Delete
+          </button>          <form th:id="|df${l.id}|" th:action="@{/admin/leaves/{id}/delete(id=${l.id})}" method="post" style="display:none;"></form>
+        </td>
+      </tr>
+      <tr th:if="${#lists.isEmpty(leaves)}"><td colspan="8" class="empty"><p>No leave records</p></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</div>
+</body>
+</html>

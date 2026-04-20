@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/admin}">
+<head><title>Dashboard</title></head>
+<body>
+<div layout:fragment="content">
+  <div class="wb">
+    <div><h1>Welcome, Admin! &#x1F44B;</h1><p>Here's your system overview for today</p></div>
+    <div class="dchip">&#x1F4C5; <span id="todayDate"></span></div>
+  </div>
+  <div class="sg">
+    <a th:href="@{/admin/employees}" class="sc or">
+      <div class="sc-ic"><svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg></div>
+      <div class="sc-lb">Total Employees</div><div class="sc-v" th:text="${totalEmployees}">0</div>
+    </a>
+    <a th:href="@{/admin/leaves}" class="sc re">
+      <div class="sc-ic"><svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg></div>
+      <div class="sc-lb">On Leave</div><div class="sc-v" th:text="${onLeave}">0</div>
+    </a>
+    <a th:href="@{/admin/departments}" class="sc bl">
+      <div class="sc-ic"><svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24"><path d="M12 7V3H2v18h20V7H12z"/></svg></div>
+      <div class="sc-lb">Departments</div><div class="sc-v" th:text="${departments}">0</div>
+    </a>
+    <a th:href="@{/admin/leaves/pending}" class="sc ye">
+      <div class="sc-ic"><svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg></div>
+      <div class="sc-lb">Pending Approvals</div><div class="sc-v" th:text="${pendingLeaves}">0</div>
+    </a>
+    <a th:href="@{/admin/attendance}" class="sc gr">
+      <div class="sc-ic"><svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div>
+      <div class="sc-lb">Present Today</div><div class="sc-v" th:text="${presentToday}">0</div>
+    </a>
+    <a th:href="@{/admin/announcements}" class="sc pu">
+      <div class="sc-ic"><svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg></div>
+      <div class="sc-lb">Announcements</div><div class="sc-v" th:text="${announcements}">0</div>
+    </a>
+    <a th:href="@{/admin/leaves}" class="sc te">
+      <div class="sc-ic"><svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div>
+      <div class="sc-lb">Approved Leaves</div><div class="sc-v" th:text="${approvedLeaves}">0</div>
+    </a>
+    <a th:href="@{/admin/payroll}" class="sc pi">
+      <div class="sc-ic"><svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg></div>
+      <div class="sc-lb">Pending Payroll</div><div class="sc-v" th:text="${pendingPayroll}">0</div>
+    </a>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+    <div class="card">
+      <div class="ch"><span class="ct">&#x1F4B5; Payroll Summary (This Month)</span></div>
+      <div style="display:flex;gap:14px;">
+        <div style="flex:1;padding:14px;background:#f8fafc;border-radius:10px;text-align:center;">
+          <div style="font-size:11.5px;color:#64748b;font-weight:700;text-transform:uppercase;margin-bottom:7px;">Total</div>
+          <div style="font-size:22px;font-weight:800;color:#f97316;">&#x20B9;<span th:text="${#numbers.formatDecimal(totalPayroll,0,'COMMA',0,'POINT')}">0</span></div>
+        </div>
+        <div style="flex:1;padding:14px;background:#f8fafc;border-radius:10px;text-align:center;">
+          <div style="font-size:11.5px;color:#64748b;font-weight:700;text-transform:uppercase;margin-bottom:7px;">Paid</div>
+          <div style="font-size:22px;font-weight:800;color:#10b981;">&#x20B9;<span th:text="${#numbers.formatDecimal(paidPayroll,0,'COMMA',0,'POINT')}">0</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ch"><span class="ct">&#x26A1; Quick Actions</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;">
+        <a th:href="@{/admin/employees/add}" class="btn btn-p btn-sm">+ Add Employee</a>
+        <a th:href="@{/admin/leaves/pending}" class="btn btn-w btn-sm">Review Leaves</a>
+        <a th:href="@{/admin/payroll/add}" class="btn btn-s btn-sm">Create Payroll</a>
+        <a th:href="@{/admin/announcements/add}" class="btn btn-v btn-sm">Post Announcement</a>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

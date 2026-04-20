@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>EMS — Sign In</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Inter',sans-serif;background:#f8fafc;min-height:100vh;display:flex;}
+    .wrap{display:grid;grid-template-columns:1fr 1fr;width:100%;min-height:100vh;}
+    .left{background:linear-gradient(135deg,#f97316 0%,#ea580c 50%,#c2410c 100%);display:flex;flex-direction:column;justify-content:center;padding:60px;color:#fff;}
+    .brand{display:flex;align-items:center;gap:12px;margin-bottom:50px;}
+    .bic{width:44px;height:44px;background:rgba(255,255,255,.22);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;}
+    .bnm{font-size:21px;font-weight:800;}
+    .left h1{font-size:36px;font-weight:800;line-height:1.2;margin-bottom:14px;}
+    .left p{font-size:15.5px;opacity:.85;line-height:1.7;margin-bottom:36px;}
+    .fl{list-style:none;}.fl li{display:flex;align-items:center;gap:11px;padding:9px 0;font-size:14px;border-bottom:1px solid rgba(255,255,255,.13);}.fl li:last-child{border:none;}
+    .chk{width:23px;height:23px;background:rgba(255,255,255,.22);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;}
+    .jwt-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:8px;padding:11px 14px;margin-top:24px;font-size:12.5px;display:flex;align-items:center;gap:9px;}
+    .right{display:flex;align-items:center;justify-content:center;padding:60px 40px;background:#fff;}
+    .fbox{width:100%;max-width:415px;}
+    .fbox h2{font-size:27px;font-weight:800;color:#0f172a;margin-bottom:5px;}
+    .sub{color:#64748b;font-size:14px;margin-bottom:28px;}
+    .alert{padding:11px 15px;border-radius:8px;margin-bottom:16px;display:flex;align-items:center;gap:9px;font-size:13.5px;}
+    .al-er{background:#fee2e2;color:#991b1b;border:1px solid #fecaca;}
+    .al-ok{background:#d1fae5;color:#065f46;border:1px solid #a7f3d0;}
+    .al-in{background:#dbeafe;color:#1e40af;border:1px solid #bfdbfe;}
+    .fg{margin-bottom:17px;}.fg label{display:block;font-size:13px;font-weight:600;color:#334155;margin-bottom:5px;}
+    .fg input{width:100%;padding:11px 13px;border:1.5px solid #e2e8f0;border-radius:9px;font-size:14px;color:#1e293b;transition:.14s;background:#f8fafc;}
+    .fg input:focus{outline:none;border-color:#f97316;box-shadow:0 0 0 3px rgba(249,115,22,.12);background:#fff;}
+    .sbtn{width:100%;background:#f97316;color:#fff;border:none;padding:13px;border-radius:9px;font-size:15px;font-weight:700;cursor:pointer;transition:.14s;margin-top:5px;}.sbtn:hover{background:#ea580c;}
+    .lf{text-align:center;margin-top:20px;font-size:13.5px;color:#64748b;}.lf a{color:#f97316;font-weight:600;text-decoration:none;}
+    .demo{background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:13px 15px;margin-top:18px;font-size:12.5px;color:#92400e;}
+    .demo h4{font-weight:700;margin-bottom:7px;color:#ea580c;}.demo p{margin-bottom:3px;}
+    @media(max-width:768px){.wrap{grid-template-columns:1fr;}.left{display:none;}.right{padding:28px 18px;}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="left">
+    <div class="brand"><div class="bic">&#x1F3E2;</div><span class="bnm">Employee Management System</span></div>
+    <h1>Welcome Back to EMS</h1>
+    <p>Manage your entire workforce from one powerful platform. HR, Payroll, Attendance, and more.</p>
+    <ul class="fl">
+      <li><div class="chk">&#x2713;</div>Employee &amp; Department Management</li>
+      <li><div class="chk">&#x2713;</div>Leave Requests &amp; Approvals</li>
+      <li><div class="chk">&#x2713;</div>Payroll Processing &amp; Payslips</li>
+      <li><div class="chk">&#x2713;</div>Attendance Tracking</li>
+      <li><div class="chk">&#x2713;</div>Company Announcements</li>
+    </ul>
+    <div class="jwt-badge">&#x1F512; <span><strong>JWT Auth</strong> — 30-min access token, 7-day refresh token. Sessions auto-renew.</span></div>
+  </div>
+  <div class="right">
+    <div class="fbox">
+      <h2>Sign in to EMS</h2>
+      <p class="sub">Enter your credentials to access your dashboard</p>
+
+      <div th:if="${error}"      class="alert al-er">&#x26A0; Invalid username or password. Please try again.</div>
+      <div th:if="${expired}"    class="alert al-in">&#x23F1; Your session expired (30 min). Please login again.</div>
+      <div th:if="${denied}"     class="alert al-er">&#x26D4; Access denied. You don't have permission for that page.</div>
+      <div th:if="${logout}"     class="alert al-ok">&#x2713; You have been logged out successfully.</div>
+      <div th:if="${registered}" class="alert al-ok">&#x1F389; Account created! You can now login below.</div>
+
+      <form id="loginForm" th:action="@{/auth/login}" method="POST" novalidate>
+        <div class="fg"><label for="username">Username</label><input type="text" id="username" name="username" placeholder="Enter username" required autofocus data-username></div>
+        <div class="fg"><label for="password">Password</label><input type="password" id="password" name="password" placeholder="Enter password" required data-password></div>
+        <button type="submit" class="sbtn">Sign In &#x2192;</button>
+      </form>
+
+      <div class="lf">
+        <a th:href="@{/}">&#x2190; Back to Home</a>
+        &nbsp;&nbsp;&#x2022;&nbsp;&nbsp;
+        <span style="color:#94a3b8;">New here?</span> <a th:href="@{/register}">Register</a>
+      </div>
+      <div class="demo">
+        <h4>&#x1F512; Demo Credentials</h4>
+        <p><strong>Admin:</strong> admin / admin123</p>
+        <p><strong>Employee:</strong> mohan / mohan123</p>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="/js/validate.js"></script>
+<script>
+  const lf = document.getElementById('loginForm');
+  emsLive(lf);
+  lf.addEventListener('submit', function(e){ if(!emsValidate(lf)) e.preventDefault(); });
+</script>
+</body>
+</html>

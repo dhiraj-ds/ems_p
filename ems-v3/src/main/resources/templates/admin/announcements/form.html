@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/admin}">
+<head><title>Announcement Form</title></head>
+<body>
+<div layout:fragment="content">
+  <div class="ph"><h1 th:text="${announcement.id != null ? 'Edit Announcement' : 'Post Announcement'}">Announcement</h1></div>
+  <div class="card">
+    <form id="annForm" th:action="${announcement.id != null ? '/admin/announcements/' + announcement.id + '/update' : '/admin/announcements/save'}" method="post" novalidate>
+      <div class="fg">
+        <div class="fi">
+          <label>Title * <span style="color:#94a3b8;font-size:11px;">(3–200 characters)</span></label>
+          <input class="fc" type="text" name="title" th:value="${announcement.title}" required
+                 data-minlen="3" data-minlen-msg="Title must be at least 3 characters"
+                 placeholder="Announcement title">
+        </div>
+        <div class="fi">
+          <label>Audience</label>
+          <select class="fc" name="audience">
+            <option value="ALL_STAFF"   th:selected="${announcement.audience?.name() == 'ALL_STAFF'}">All Staff</option>
+            <option value="ENGINEERING" th:selected="${announcement.audience?.name() == 'ENGINEERING'}">Engineering</option>
+            <option value="HR"          th:selected="${announcement.audience?.name() == 'HR'}">Human Resources</option>
+            <option value="FINANCE"     th:selected="${announcement.audience?.name() == 'FINANCE'}">Finance</option>
+            <option value="MARKETING"   th:selected="${announcement.audience?.name() == 'MARKETING'}">Marketing</option>
+          </select>
+        </div>
+        <div class="fi">
+          <label>Priority</label>
+          <select class="fc" name="priority">
+            <option value="NORMAL"    th:selected="${announcement.priority?.name() == 'NORMAL'}">Normal</option>
+            <option value="IMPORTANT" th:selected="${announcement.priority?.name() == 'IMPORTANT'}">Important</option>
+            <option value="URGENT"    th:selected="${announcement.priority?.name() == 'URGENT'}">Urgent</option>
+            <option value="HR_UPDATE" th:selected="${announcement.priority?.name() == 'HR_UPDATE'}">HR Update</option>
+          </select>
+        </div>
+      </div>
+      <div class="fi" style="margin-top:14px;">
+        <label>Message * <span style="color:#94a3b8;font-size:11px;">(at least 10 characters)</span></label>
+        <textarea class="fc" name="message" rows="5" required
+                  data-minlen="10" data-minlen-msg="Message must be at least 10 characters"
+                  placeholder="Write your announcement here..."
+                  th:text="${announcement.message}"></textarea>
+      </div>
+      <div class="ff">
+        <button class="btn btn-p" type="submit" th:text="${announcement.id != null ? '✓ Update' : '✓ Post'} + ' Announcement'">Post</button>
+        <a th:href="@{/admin/announcements}" class="btn btn-o">Cancel</a>
+      </div>
+    </form>
+  </div>
+  <script th:src="@{/js/validate.js}"></script>
+  <script>
+    const form = document.getElementById('annForm');
+    emsLive(form);
+    form.addEventListener('submit', function(e){ if(!emsValidate(form)) e.preventDefault(); });
+  </script>
+</div>
+</body>
+</html>

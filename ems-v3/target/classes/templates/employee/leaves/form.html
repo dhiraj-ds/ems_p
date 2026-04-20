@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/employee}">
+<head><title>Apply for Leave</title></head>
+<body>
+<div layout:fragment="content">
+  <div class="ph"><h1>Apply for Leave</h1><p>Submit a new leave request</p></div>
+  <div class="card">
+    <form id="leaveForm" th:action="@{/employee/leaves/apply}" method="post" novalidate>
+      <div class="fg">
+        <div class="fi">
+          <label>Leave Type *</label>
+          <select class="fc" name="leaveType" required>
+            <option value="">— Select Type —</option>
+            <option value="ANNUAL">Annual Leave</option>
+            <option value="SICK">Sick Leave</option>
+            <option value="CASUAL">Casual Leave</option>
+            <option value="MEDICAL">Medical Leave</option>
+            <option value="MATERNITY">Maternity Leave</option>
+            <option value="PATERNITY">Paternity Leave</option>
+          </select>
+        </div>
+        <div class="fi">
+          <label>From Date *</label>
+          <input class="fc" type="date" name="fromDate" id="fromDate" required data-notpast>
+        </div>
+        <div class="fi">
+          <label>To Date *</label>
+          <input class="fc" type="date" name="toDate" id="toDate" required data-afterfield="fromDate">
+        </div>
+      </div>
+      <div class="fi" style="margin-top:14px;">
+        <label>Reason * <span style="color:#94a3b8;font-size:11px;">(at least 10 characters)</span></label>
+        <textarea class="fc" name="reason" rows="4" required
+                  data-minlen="10" data-minlen-msg="Please provide at least 10 characters describing your reason"
+                  placeholder="Describe your reason for leave..."></textarea>
+      </div>
+      <div class="ff">
+        <button class="btn btn-p" type="submit">&#x2713; Submit Request</button>
+        <a th:href="@{/employee/leaves}" class="btn btn-o">Cancel</a>
+      </div>
+    </form>
+  </div>
+  <script th:src="@{/js/validate.js}"></script>
+  <script>
+    const form = document.getElementById('leaveForm');
+    emsLive(form);
+    form.addEventListener('submit', function(e){ if(!emsValidate(form)) e.preventDefault(); });
+  </script>
+</div>
+</body>
+</html>

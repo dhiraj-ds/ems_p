@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/admin}">
+<head><title>Mark Attendance</title></head>
+<body>
+<div layout:fragment="content">
+  <div class="ph"><h1 th:text="${record.id != null ? 'Edit Attendance' : 'Mark Attendance'}">Attendance</h1></div>
+  <div class="card">
+    <form id="attForm" th:action="${record.id != null ? '/admin/attendance/' + record.id + '/update' : '/admin/attendance/save'}" method="post" novalidate>
+      <div class="fg">
+        <div class="fi">
+          <label>Employee *</label>
+          <select class="fc" name="employeeId" required>
+            <option value="">— Select Employee —</option>
+            <option th:each="e : ${employees}" th:value="${e.id}" th:text="${e.fullName}"
+                    th:selected="${record.employee != null and record.employee.id == e.id}"></option>
+          </select>
+        </div>
+        <div class="fi">
+          <label>Date *</label>
+          <input class="fc" type="date" name="date" th:value="${record.date}" required>
+        </div>
+        <div class="fi">
+          <label>Check In</label>
+          <input class="fc" type="time" name="checkIn" th:value="${record.checkIn}">
+        </div>
+        <div class="fi">
+          <label>Check Out</label>
+          <input class="fc" type="time" name="checkOut" id="checkOut" th:value="${record.checkOut}">
+        </div>
+        <div class="fi">
+          <label>Status *</label>
+          <select class="fc" name="status" required>
+            <option value="PRESENT"  th:selected="${record.status?.name() == 'PRESENT'}">Present</option>
+            <option value="ABSENT"   th:selected="${record.status?.name() == 'ABSENT'}">Absent</option>
+            <option value="LATE"     th:selected="${record.status?.name() == 'LATE'}">Late</option>
+            <option value="HALF_DAY" th:selected="${record.status?.name() == 'HALF_DAY'}">Half Day</option>
+            <option value="ON_LEAVE" th:selected="${record.status?.name() == 'ON_LEAVE'}">On Leave</option>
+          </select>
+        </div>
+        <div class="fi">
+          <label>Remarks</label>
+          <input class="fc" type="text" name="remarks" th:value="${record.remarks}" placeholder="Optional notes">
+        </div>
+      </div>
+      <div class="ff">
+        <button class="btn btn-p" type="submit">&#x2713; Save</button>
+        <a th:href="@{/admin/attendance}" class="btn btn-o">Cancel</a>
+      </div>
+    </form>
+  </div>
+  <script th:src="@{/js/validate.js}"></script>
+  <script>
+    const form = document.getElementById('attForm');
+    emsLive(form);
+    form.addEventListener('submit', function(e){
+      // Extra check: if check-in exists, checkout must be after check-in
+      const ci = form.querySelector('[name="checkIn"]').value;
+      const co = form.querySelector('[name="checkOut"]').value;
+      if(ci && co && co <= ci){
+        const coField = form.querySelector('[name="checkOut"]');
+        coField.classList.add('fc-err');
+        let sp = coField.parentElement.querySelector('.v-err');
+        if(!sp){ sp=document.createElement('span'); sp.className='v-err'; coField.parentElement.appendChild(sp); }
+        sp.textContent='Check-out must be after check-in';
+        e.preventDefault(); return;
+      }
+      if(!emsValidate(form)) e.preventDefault();
+    });
+  </script>
+</div>
+</body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/employee}">
+<head>
+  <title>Payslip</title>
+</head>
+
+<body>
+<div layout:fragment="content">
+
+  <!-- Auto download flag -->
+  <span th:if="${autoDownload}" id="autoDownloadFlag" style="display:none;"></span>
+
+  <div class="slip">
+    <div class="slip-hd">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;">
+
+        <div>
+          <div class="slip-co">🏢 Employee Management System</div>
+          <div class="slip-sub">Official Salary Slip — Confidential</div>
+          <div class="slip-per"
+               th:text="${payroll.monthName + ' ' + payroll.payrollYear}">
+          </div>
+        </div>
+
+        <div style="text-align:right;opacity:.85;font-size:13px;">
+          <div th:text="|Generated: ${generatedDate}|"></div>
+
+          <!-- ✅ FIXED: removed leftPad -->
+          <div th:text="|Slip #PAY-${T(java.lang.String).format('%04d', payroll.id)}|"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="slip-bd">
+
+      <!-- Employee Info -->
+      <div class="slip-sec">
+        <h3>Employee Information</h3>
+
+        <div class="slip-row">
+          <div class="slip-f">
+            <label>Employee Name</label>
+            <p th:text="${employee.fullName}"></p>
+          </div>
+
+          <div class="slip-f">
+            <label>Employee ID</label>
+
+            <!-- ✅ FIXED -->
+            <p th:text="|EMP-${T(java.lang.String).format('%04d', employee.id)}|"></p>
+          </div>
+
+          <div class="slip-f">
+            <label>Department</label>
+            <p th:text="${employee.department != null ? employee.department.name : '—'}"></p>
+          </div>
+        </div>
+
+        <div class="slip-row2" style="margin-top:10px;">
+          <div class="slip-f">
+            <label>Designation</label>
+            <p th:text="${employee.position != null ? employee.position : '—'}"></p>
+          </div>
+
+          <div class="slip-f">
+            <label>Email</label>
+            <p th:text="${employee.email}"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Payroll Period -->
+      <div class="slip-sec">
+        <h3>Payroll Period</h3>
+
+        <div class="slip-row">
+          <div class="slip-f">
+            <label>Pay Period</label>
+            <p th:text="${payroll.monthName + ' ' + payroll.payrollYear}"></p>
+          </div>
+
+          <div class="slip-f">
+            <label>Payment Date</label>
+            <p th:text="${payroll.paymentDate != null ? payroll.paymentDate : 'Pending'}"></p>
+          </div>
+
+          <div class="slip-f">
+            <label>Payment Method</label>
+            <p th:text="${payroll.paymentMethod != null ? payroll.paymentMethod : 'Bank Transfer'}"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Earnings & Deductions -->
+      <div class="slip-sec">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+
+          <div>
+            <h3>Earnings</h3>
+            <table class="slip-tbl">
+              <tr>
+                <td>Basic Salary</td>
+                <td th:text="|₹${#numbers.formatDecimal(payroll.basicSalary ?: 0,0,'COMMA',2,'POINT')}|"></td>
+              </tr>
+              <tr>
+                <td>Allowances</td>
+                <td style="color:#10b981;"
+                    th:text="|₹${#numbers.formatDecimal(payroll.allowances ?: 0,0,'COMMA',2,'POINT')}|">
+                </td>
+              </tr>
+
+              <tr style="font-weight:700;border-top:2px solid #e2e8f0;">
+                <td>Gross Pay</td>
+                <td th:text="|₹${#numbers.formatDecimal((payroll.basicSalary ?: 0) + (payroll.allowances ?: 0),0,'COMMA',2,'POINT')}|"></td>
+              </tr>
+            </table>
+          </div>
+
+          <div>
+            <h3>Deductions</h3>
+            <table class="slip-tbl">
+              <tr>
+                <td>Total Deductions</td>
+                <td style="color:#ef4444;"
+                    th:text="|₹${#numbers.formatDecimal(payroll.deductions ?: 0,0,'COMMA',2,'POINT')}|">
+                </td>
+              </tr>
+            </table>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Net Pay -->
+      <div class="slip-net">
+        <div class="slip-nl">Net Pay (Take Home)</div>
+        <div class="slip-nv"
+             th:text="|₹${#numbers.formatDecimal(payroll.netPay ?: 0,0,'COMMA',2,'POINT')}|">
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="slip-act">
+    <button class="btn btn-p" onclick="printSlip()">🖨 Print Payslip</button>
+
+    <a th:href="@{/employee/payroll/{id}/payslip/download(id=${payroll.id})}"
+       class="btn btn-s">⬇ Download PDF</a>
+
+    <a th:href="@{/employee/payroll}" class="btn btn-o">← Back</a>
+  </div>
+
+</div>
+</body>
+</html>
